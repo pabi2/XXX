@@ -3,7 +3,7 @@ language: python
 python:
   - "2.7"
 
-sudo: false
+sudo: true
 cache: pip
 
 addons:
@@ -16,13 +16,11 @@ addons:
 
 env:
   global:
-  - VERSION="8.0" TESTS="0" LINT_CHECK="0" TRANSIFEX="0"
-  - TRANSIFEX_USER='transbot@odoo-community.org'
+  - VERSION="8.0" TESTS="0" LINT_CHECK="0"
   - secure: "hyBSe2obvvpXtvIxYBoELvgy51tR36MUrUQ4HvOo+qoIjFc1u1YVvTzlgJrUXoAAtha0mJN/nQwEvkN18ipcZItpsoWWsGhHPIbz1NhalbZwpCbkoLZKvS3rAstMdzKkHKCvI9Sg4iQ2gpZr6UTchxu+RO1BFatLkQJiNrUjMjQ="
 
   matrix:
   - LINT_CHECK="1"
-  - TRANSIFEX="1"
   - TESTS="1" ODOO_REPO="odoo/odoo"
 
 virtualenv:
@@ -30,9 +28,11 @@ virtualenv:
 
 install:
   - git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
+  - git clone https://github.com/OCA/bank-payment.git -b ${VERSION} ${HOME}/bank-payment
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - pip install unidecode
   - travis_install_nightly
+  - pip install anybox.testing.openerp # needed for testing account_invoice_line_sort
 
 script:
   - travis_run_tests
